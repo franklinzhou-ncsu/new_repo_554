@@ -1,6 +1,6 @@
 # ST 554 Homework 6
 # Franklin Zhou
-# 3-27-2026
+# 3-7-2026
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -86,4 +86,5 @@ prob = ins.find_prob(2.1, sided = "two-sided")
 print("The two-sided probability is:", prob)
 
 # Print out the value of the simulated slopes using the attribute
+
 print(ins.slopes)

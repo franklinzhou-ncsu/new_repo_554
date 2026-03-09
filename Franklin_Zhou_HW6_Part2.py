@@ -1,6 +1,6 @@
 # ST 554 Homework 6
 # Franklin Zhou
-# 3-7-2026
+# 3-9-2026
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -57,8 +57,13 @@ class SLR_slope_simulator:
             print("Please run the run_simulations() method first.")
             return
         else:
-            if sided == "two-sided":
-                prob = np.mean(np.abs(self.slopes) > np.abs(value))
+            if sided == "two-sided": # update "two-sided" definition
+                if value < np.median(self.slopes):
+                    prob = 2 * np.mean(self.slopes < value)
+                elif value > np.median(self.slopes):
+                    prob = 2 * np.mean(self.slopes > value)
+                else:
+                    prob = 0.5
             elif sided == "above":
                 prob = np.mean(self.slopes > value)
             elif sided == "below":
@@ -75,6 +80,9 @@ ins = SLR_slope_simulator(
     seed = 10
 )
 
+# Error message
+ins.plot_sampling_distribution()
+
 # Run 10000 simulations
 ins.run_simulations(10000)
 
@@ -86,5 +94,4 @@ prob = ins.find_prob(2.1, sided = "two-sided")
 print("The two-sided probability is:", prob)
 
 # Print out the value of the simulated slopes using the attribute
-
 print(ins.slopes)

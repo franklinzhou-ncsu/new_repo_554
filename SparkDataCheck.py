@@ -43,15 +43,15 @@ class SparkDataCheck:
         num_types = ['float', 'int', 'longint', 'bigint', 'double', 'integer']
         
         if dict(self.df.dtypes)[column] not in num_types:
-            print("Warning: Non-numeric column. Nothing is modified.")
+            print(f"Warning: {column} is non-numeric. Nothing is modified.")
             return self
 
         if lower is not None and upper is not None:
-            self.df = self.df.withColumn("Numeric_Check_Result", F.when(self.df[column].isNull(), None).otherwise(self.df[column].between(lower, upper))) # if column value is empty, assign None        
+            self.df = self.df.withColumn(f"{column}_numeric_check", F.when(self.df[column].isNull(), None).otherwise(self.df[column].between(lower, upper))) # if column value is empty, assign None        
         elif lower is not None:
-            self.df = self.df.withColumn("Numeric_Check_Result", F.when(self.df[column].isNull(), None).otherwise(self.df[column] >= lower))   
+            self.df = self.df.withColumn(f"{column}_numeric_check", F.when(self.df[column].isNull(), None).otherwise(self.df[column] >= lower))   
         elif upper is not None:
-            self.df = self.df.withColumn("Numeric_Check_Result", F.when(self.df[column].isNull(), None).otherwise(self.df[column] <= upper))        
+            self.df = self.df.withColumn(f"{column}_numeric_check", F.when(self.df[column].isNull(), None).otherwise(self.df[column] <= upper))        
         else:
             print("Warning: At least one bound must be provided. Nothing is modified.")
             return self
@@ -62,16 +62,16 @@ class SparkDataCheck:
     def check_string(self, column = None, levels = None):
         
         if dict(self.df.dtypes)[column] != "string":
-            print("Warning: The column is not string. Nothing is modified.")
+            print(f"Warning: {column} is not string. Nothing is modified.")
             return self        
         else:
-            self.df = self.df.withColumn("String_Check_Result", F.when(self.df[column].isNull(), None).otherwise(self.df[column].isin(levels)))
+            self.df = self.df.withColumn(f"{column}_string_check", F.when(self.df[column].isNull(), None).otherwise(self.df[column].isin(levels)))
             return self
         
     # Checking Missing values
     def check_missing(self, column):
         
-        self.df = self.df.withColumn("Missing_Check_Result", self.df[column].isNull())
+        self.df = self.df.withColumn(f"{column}_missing_check", self.df[column].isNull())
         return self
         
     ###
@@ -88,7 +88,7 @@ class SparkDataCheck:
             
             #check datatype first
             if dict(self.df.dtypes)[column] not in num_types:
-                print("Warning: Non-numeric column. Nothing is returned.")
+                print(f"Warning: {column} is Non-numeric. Nothing is returned.")
                 return None
             
             # if group value is provided, find min and max of the column by that group
@@ -123,7 +123,7 @@ class SparkDataCheck:
         
         # if col_1 is not string, stop
         if dict(self.df.dtypes)[col_1] != "string":
-            print("Warning: Col_1 is a numeric column. Nothing is returned.")
+            print(f"Warning: {col_1} is a numeric column. Nothing is returned.")
             return None
          # if col_1 is string:
         else:
@@ -131,7 +131,7 @@ class SparkDataCheck:
             if col_2:
                 # if col_2 is not string, stop
                 if dict(self.df.dtypes)[col_2] != "string":
-                    print("Warning: Col_2 is a numeric column. Nothing is returned.")
+                    print(f"Warning: {col_2} is a numeric column. Nothing is returned.")
                     return None
                 # if col_2 is numeric, process
                 else:

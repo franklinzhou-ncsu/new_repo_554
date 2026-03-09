@@ -110,9 +110,9 @@ class SparkDataCheck:
             
             for c in numeric_cols:
                 if group:
-                    result = self.df.groupBy(group).agg(F.min(col), F.max(col)).toPandas()
+                    result = self.df.groupBy(group).agg(F.min(column), F.max(column)).toPandas()
                 else:
-                    result = self.df.agg(F.min(col), F.max(col)).toPandas()
+                    result = self.df.agg(F.min(column), F.max(column)).toPandas()
                 results.append(result)
                 
             combined = reduce(lambda left, right: pd.merge(left, right), results)

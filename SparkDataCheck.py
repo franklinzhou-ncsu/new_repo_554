@@ -19,7 +19,7 @@ class SparkDataCheck:
     # Add two @classmethods.
     ###
     
-    @classmethods
+    @classmethod
     def read_csv(cls, spark, file_path): # three arguments for the class, spark session and path to the file
         csv_dataframe = spark.read.load(file_path,
                                  format="csv",
@@ -72,13 +72,14 @@ class SparkDataCheck:
     def check_missing(self, column):
         
         self.df = self.df.withColumn("Missing_Check_Result", self.df[column].isNull())
+        return self
         
     ###
     # Summarization methods
     ###
     
     # find min and max of column(s)
-    def min_max(self, column, group):
+    def min_max(self, column = None, group = None):
         # numerical types
         num_types = ['float', 'int', 'longint', 'bigint', 'double', 'integer']
         
@@ -107,7 +108,7 @@ class SparkDataCheck:
             # save result to this list
             results = [] 
             
-            for col in numeric_cols:
+            for c in numeric_cols:
                 if group:
                     result = self.df.groupBy(group).agg(F.min(col), F.max(col)).toPandas()
                 else:
@@ -117,7 +118,7 @@ class SparkDataCheck:
             combined = reduce(lambda left, right: pd.merge(left, right), results)
             return combined
             
-    # medthod for counts
+    # method for counts
     def levels_count(self, col_1, col_2 = None):
         
         # if col_1 is not string, stop

@@ -25,7 +25,7 @@ class SLR_slope_simulator:
         return y
 
     # fit_slope method
-    def fit_slope(self, x,y):
+    def fit_slope(self, x, y):
         reg = linear_model.LinearRegression()
         reg.fit(self.x.reshape(-1, 1), y) # fit LM
         return reg.coef_[0] # return the slope
@@ -38,6 +38,7 @@ class SLR_slope_simulator:
             slope = self.fit_slope(self.x, y) # call fit_slope method to get slope
             slopes.append(slope) # save slopes
         self.slopes = np.array(slopes)
+        return self.slopes
 
     # plot_sampling_distribution method
     def plot_sampling_distribution(self):
@@ -95,3 +96,4 @@ print("The two-sided probability is:", prob)
 
 # Print out the value of the simulated slopes using the attribute
 print(ins.slopes)
+

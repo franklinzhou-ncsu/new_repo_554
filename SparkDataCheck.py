@@ -108,15 +108,21 @@ class SparkDataCheck:
             # save result to this list
             results = [] 
             
-            for c in numeric_cols:
-                if group:
-                    result = self.df.groupBy(group).agg(F.min(column), F.max(column)).toPandas()
-                else:
-                    result = self.df.agg(F.min(column), F.max(column)).toPandas()
-                results.append(result)
-                
-            combined = reduce(lambda left, right: pd.merge(left, right), results)
-            return combined
+            # if group value is provided, find min and max of the columns by that group and merge
+            if group:
+                for c in numeric_cols:                
+                    result = self.df.groupBy(group).agg(F.min(c), F.max(c)).toPandas()
+                    results.append(result)
+                combined = reduce(lambda x, y: pd.merge(x, y, on = group), results)
+                return combined
+            
+            # if group value is not provided,
+            else:
+                for c in numeric_cols:
+                    result = self.df.agg(F.min(c), F.max(c)).toPandas()
+                    results.append(result)
+                return pd.Dataframe(results)
+            
             
     # method for counts
     def levels_count(self, col_1, col_2 = None):

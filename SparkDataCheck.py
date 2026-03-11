@@ -59,7 +59,7 @@ class SparkDataCheck:
         return self
 
     # Validate string type
-    def check_string(self, column = None, levels = None):
+    def check_string(self, column, levels = None):
         
         if dict(self.df.dtypes)[column] != "string":
             print(f"Warning: {column} is not string. Nothing is modified.")

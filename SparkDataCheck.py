@@ -65,7 +65,7 @@ class SparkDataCheck:
             print(f"Warning: {column} is not string. Nothing is modified.")
             return self        
         else:
-            self.df = self.df.withColumn(f"{column}_string_check", F.when(self.df[column].isNull(), None).otherwise(self.df[column].isin(levels)))
+            self.df = self.df.withColumn(f"{column}_string_check", F.when(self.df[column].isNull(), None).otherwise(self.df[column].isin(levels))) # when column is null, return None, otherwise return if column is in levels
             return self
         
     # Checking Missing values
@@ -87,7 +87,7 @@ class SparkDataCheck:
         if column is not None:
             
             #check datatype first
-            if dict(self.df.dtypes)[column] not in num_types:
+            if dict(self.df.dtypes)[column] not in num_types: # convert tuples to dictionary and call the key
                 print(f"Warning: {column} is Non-numeric. Nothing is returned.")
                 return None
             

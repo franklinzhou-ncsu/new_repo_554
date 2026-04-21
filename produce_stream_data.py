@@ -19,5 +19,5 @@ df = pd.read_csv("Final_Project/power_streaming_data.csv")
 # 20 iterations
 for i in range(20):
     sample = df.sample(5) # Randomly sample five rows
-    sample.to_csv(f"Final_Project/stream_folder/batch_"+ str(i) + ".csv", index = False) # output to a .csv file
+    sample.to_csv(f"Final_Project/stream_folder/batch_" + str(i) + ".csv", index = False) # output to a .csv file
     time.sleep(10) # Pause for 10 seconds in between outputting of data sets
